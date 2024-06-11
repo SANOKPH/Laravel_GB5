@@ -14,7 +14,8 @@ class UserRegisterRequest extends DefaultRequest
     public function rules(): array
     {
         return [
-            'name'      => 'required|string|max:255',
+            'first_name'      => 'required|string|max:255',
+            'last_name'      => 'required|string|max:255',
             'email'     => 'required|string|max:255|unique:users',
             'password'  => 'required|string'
         ];

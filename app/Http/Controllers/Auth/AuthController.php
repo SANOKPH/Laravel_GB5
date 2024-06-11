@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UserLoginRequest;
 use App\Http\Requests\User\UserRegisterRequest;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -49,6 +50,17 @@ class AuthController extends Controller
         Auth::user()->tokens()->delete();
         return response()->json([
             'message' => 'Logout successfull'
+        ]);
+    }
+
+    public function index(Request $request)
+    {
+        $user = $request->user();
+        $permissions = $user->getAllPermissions();
+        $roles = $user->getRoleNames();
+        return response()->json([
+            'message' => 'Login success',
+            'data' =>$user,
         ]);
     }
 }
