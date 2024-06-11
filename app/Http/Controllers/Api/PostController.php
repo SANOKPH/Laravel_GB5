@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Posts\ListPostResource;
+use App\Http\Resources\ShowPostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -37,7 +38,9 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $post = Post::find($id);
+        $post = new ShowPostResource($post);
+        return ["success" => true, "data" => $post];
     }
 
     /**
@@ -45,7 +48,8 @@ class PostController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $post = Post::createOrUpdate($request, $id);
+        return ["success" => true, "data" => $post, "Message" => "Post Was Updated Successfully"];
     }
 
     /**
