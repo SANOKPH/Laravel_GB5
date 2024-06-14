@@ -6,6 +6,8 @@ namespace App\Models;
 
 use App\Http\Requests\User\UserRegisterRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -25,6 +27,7 @@ class User extends Authenticatable
         'last_name',
         'email',
         'password',
+        'phone'
     ];
 
     /**
@@ -47,9 +50,32 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public static function createOrUpdate(UserRegisterRequest $request, string $id = null) {
-        $user = $request->only('first_name', 'last_name', 'email', 'password');
+
+    public function profile(): HasOne
+    {
+        return $this->hasOne(Media::class, 'user_id', 'id');
+    }
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Media::class, 'user_id', 'id');
+    }
+    public function friends(): HasMany
+    {
+        return $this->HasMany(Friend::class, 'user_id', 'id');
+    }
+
+    public static function requested($request)
+    {
+        return Friend::where('is_friend', 0)
+                    ->where('user_id', '=', $request->user()->id)
+                    ->whereNot('user_id', '!=', $request->user()->id)
+                    ->get();
+    }
+    public static function createOrUpdate(UserRegisterRequest $request, string $id = null)
+    {
+        $user = $request->only('first_name', 'last_name', 'email', 'password', 'phone');
         $user = self::updateOrCreate(['id' => $id], $user);
+        Media::createOrUpdate(['image' => [$request->image], 'user_id' => $user->id]);
         return $user;
     }
 }

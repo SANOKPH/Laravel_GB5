@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Resources\Media;
+namespace App\Http\Resources\Friends;
 
+use App\Http\Resources\User\ProfileResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ListMediaResource extends JsonResource
+class ListFriendResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,7 +17,7 @@ class ListMediaResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'image' => 'http://localhost:8000/storage/images/'.$this->image
+            'profile' => new ProfileResource($this->receiver),
         ];
     }
 }

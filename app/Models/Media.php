@@ -10,26 +10,42 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Media extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = ['image', 'post_id'];
+    protected $fillable = ['image', 'post_id', 'user_id', 'comment_id'];
 
-    public function post(): BelongsTo {
+    public function post(): BelongsTo
+    {
         return $this->belongsTo(Post::class);
     }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function comment(): BelongsTo
+    {
+        return $this->belongsTo(Comment::class);
+    }
 
-    public static function uploadFile($file): string {
+    public static function uploadFile($file): string
+    {
         $filename = $file->getClientOriginalName(); // get the file name
         $getfilenamewitoutext = pathinfo($filename, PATHINFO_FILENAME); // get the file name without extension
         $getfileExtension = $file->getClientOriginalExtension(); // get the file extension
         $newFileName = time() . '_' . str_replace(' ', '_', $getfilenamewitoutext) . '.' . $getfileExtension; // create new random file name
-        $img_path = $file->storeAs('public/images/posts', $newFileName); // get the image path
+        $img_path = $file->storeAs('public/images', $newFileName); // get the image path
         return $newFileName;
     }
 
-    public static function createOrUpdate($request, $id = null) {
+    public static function createOrUpdate($request)
+    {
         foreach ($request['image'] as $image) {
             $image = self::uploadFile($image);
-            $media = ['image' => $image, 'post_id' => $request['post_id']];
-            $media = self::updateOrCreate(['id' => $id], $media);
+            $media = [
+                'image' => $image ?? null,
+                'user_id' => $request['user_id'] ?? null,
+                'post_id' => $request['post_id'] ?? null,
+                'comment_id' => $request['comment_id'] ?? null,
+            ];
+            self::create($media);
         }
     }
 }

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Media;
+namespace App\Http\Resources\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ListMediaResource extends JsonResource
+class UserPostResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,8 +15,7 @@ class ListMediaResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'image' => 'http://localhost:8000/storage/images/'.$this->image
+            'posts' => $this->posts
         ];
     }
 }

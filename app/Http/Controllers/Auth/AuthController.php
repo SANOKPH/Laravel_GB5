@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UserLoginRequest;
 use App\Http\Requests\User\UserRegisterRequest;
+use App\Http\Resources\User\ProfileResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +27,7 @@ class AuthController extends Controller
     // user login
     public function login(UserLoginRequest $request)
     {
-        $credentials    =   $request->only('email', 'password');
+        $credentials = $request->only('email', 'password');
 
         if (!Auth::attempt($credentials)) {
             return response()->json([
@@ -59,8 +60,14 @@ class AuthController extends Controller
         $permissions = $user->getAllPermissions();
         $roles = $user->getRoleNames();
         return response()->json([
-            'message' => 'Login success',
-            'data' =>$user,
+            'message' => 'Welcome to your profile',
+            'data' => new ProfileResource($user),
         ]);
+    }
+
+    public function update(Request $request)
+    {
+        $user = Auth::user();
+        dd($request);
     }
 }

@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('media', function (Blueprint $table) {
+        Schema::create('friends', function (Blueprint $table) {
             $table->id();
-            $table->string('image')->nullable();
-            $table->integer('user_id')->nullable();
-            $table->integer('post_id')->nullable();
-            $table->integer('comment_id')->nullable();
-            $table->softDeletes();
+            $table->integer('user_id');
+            $table->integer('friend_id');
+            $table->boolean('is_friend')->default(false);
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('media');
+        Schema::dropIfExists('friends');
     }
 };
