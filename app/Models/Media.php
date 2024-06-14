@@ -22,6 +22,7 @@ class Media extends Model
         $getfileExtension = $file->getClientOriginalExtension(); // get the file extension
         $newFileName = time() . '_' . str_replace(' ', '_', $getfilenamewitoutext) . '.' . $getfileExtension; // create new random file name
         $img_path = $file->storeAs('public/images/posts', $newFileName); // get the image path
+        // $file->storeAs('public/images/posts', $newFileName);        
         return $newFileName;
     }
 

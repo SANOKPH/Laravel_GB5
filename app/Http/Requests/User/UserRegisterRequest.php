@@ -14,9 +14,13 @@ class UserRegisterRequest extends DefaultRequest
     public function rules(): array
     {
         return [
-            'name'      => 'required|string|max:255',
-            'email'     => 'required|string|max:255|unique:users',
-            'password'  => 'required|string'
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'phone' => 'nullable|string|max:10',
+            'password' => 'required|string|min:6',
+            'date_of_birth' => 'required|date',
+            'role'  => 'required|string'
         ];
     }
 }

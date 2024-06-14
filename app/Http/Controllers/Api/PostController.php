@@ -49,14 +49,16 @@ class PostController extends Controller
     public function update(Request $request, string $id)
     {
         $post = Post::createOrUpdate($request, $id);
-        return ["success" => true, "data" => $post, "Message" => "Post Was Updated Successfully"];
+        return response()->json(["success" => true, "data" => new ShowPostResource($post), "Message" => "Post Was Updated Successfully"]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
-    {
-        //
+    {   
+        $post = Post::findOrFail($id);
+        $post->delete();
+        return response()->json(['success' => true, 'message' => 'Post was delete successfully'], 200); 
     }
 }
