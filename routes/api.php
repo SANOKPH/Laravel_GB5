@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\FriendController;
 use App\Http\Controllers\Api\LikeController;
 use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\SharePostController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Http\Request;
@@ -25,7 +26,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // logout route
     Route::post('/logout', [AuthController::class, 'logout']);
 
-
     // user route
     Route::group(['prefix' => 'user'], function () {
         Route::get('/profile', [AuthController::class, 'index'])->name('user.profile');
@@ -33,12 +33,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('/request', [UserController::class, 'requested'])->name('user.request');
     });
-
-
+    
     // friend routes
     Route::group(['prefix' => 'friends'], function () {
-        Route::get('/request', [FriendController::class, 'requested'])->name('friends.list');
+        Route::get('/', [FriendController::class, 'index'])->name('friends.list');
+        Route::get('/request', [FriendController::class, 'requested'])->name('friends.requested');
         Route::post('/', [FriendController::class, 'store'])->name('friends.create');
+        Route::put('/accept/{id}', [FriendController::class, 'acceptFriend'])->name('friends.accept');
     });
 
     // post routes
@@ -46,8 +47,19 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', [PostController::class, 'index'])->name('posts.list');
         Route::get('/{id}', [PostController::class, 'show'])->name('posts.show');
         Route::post('/', [PostController::class, 'store'])->name('posts.create');
-        Route::post('/{id}', [PostController::class, 'update'])->name('posts.update'); // My computer doesn't suppported the method "put" when 
+        Route::post('/{id}', [PostController::class, 'update'])->name('posts.update'); // hardly to use the 'put' method to update posts that have images
         Route::delete('/{id}', [PostController::class, 'destroy'])->name('posts.delete');
+    });
+
+    /**
+     * 
+     * @name Share
+     * @use App\Http\Controllers\Api\SharePostController;
+     */
+    Route::group(['prefix' => 'share'], function () {
+        Route::get('/posts', [SharePostController::class, 'index'])->name('share.post.list');
+        Route::post('/posts', [SharePostController::class, 'store'])->name('share.post.create');
+        Route::delete('/posts/{id}', [SharePostController::class, 'destroy'])->name('share.post.delete');
     });
 
     // comment routes

@@ -33,6 +33,11 @@ class Post extends Model
         return $this->hasMany(Like::class, 'post_id', 'id');
     }
 
+    public function shares(): HasMany
+    {
+        return $this->hasMany(Share::class);
+    }
+
 
 
     public static function list(string $user_id)
@@ -43,8 +48,8 @@ class Post extends Model
     public static function createOrUpdate($request, $id = null)
     {
         $post = [
-            'title' => $request->title, 
-            'description' => $request->description, 
+            'title' => $request->title,
+            'description' => $request->description,
             'image' => $request->image,
             'user_id' => $request->user()->id
         ];

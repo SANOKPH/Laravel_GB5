@@ -18,6 +18,7 @@ class ListFriendResource extends JsonResource
         return [
             'id' => $this->id,
             'profile' => new ProfileResource($this->receiver),
+            'accepted' => $this->is_friend ? true : false,
         ];
     }
 }

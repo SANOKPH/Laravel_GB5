@@ -25,6 +25,11 @@ class Media extends Model
         return $this->belongsTo(Comment::class);
     }
 
+
+    public static function deleteImagePost($post_id) {
+        self::where('post_id', $post_id)->delete();
+    }
+
     public static function uploadFile($file): string
     {
         $filename = $file->getClientOriginalName(); // get the file name

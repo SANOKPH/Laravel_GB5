@@ -21,15 +21,35 @@ class Friend extends Model
     }
 
 
-    public static function requested($request) {
+    public static function list($request) 
+    {
+        return self::where('user_id', $request->user()->id)->where('is_friend', 1)->get();
+    }
+
+    public static function requested($request)
+    {
         return self::where('user_id', $request->user()->id)->where('is_friend', 0)->get();
+    }
+
+    public static function accept($request, $id)
+    {
+        $friend_request = self::where('user_id', $request->user()->id)
+                            ->where('friend_id', $id)
+                            ->where('is_friend', 0)
+                            ->first();
+
+        if(!$friend_request) return false; 
+        $friend_request->is_friend = 1;
+        $friend_request->save();
+
+        return $friend_request;
     }
 
     public static function createOrUpdate($request, $id = null)
     {
-        if(self::where('friend_id', $request->friend_id)->exists()) return false;
+        if (self::where('friend_id', $request->friend_id)->exists()) return false;
         $friend = [
-            'user_id' => $request->user()->id, 
+            'user_id' => $request->user()->id,
             'friend_id' => $request->friend_id
         ];
         $friend = self::updateOrCreate(['id' => $id], $friend);

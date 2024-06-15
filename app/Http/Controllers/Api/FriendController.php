@@ -13,6 +13,18 @@ class FriendController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function index(Request $request) {
+        $friends = Friend::list($request);
+        return response()->json([
+            'success' => true,
+            'message' => 'Here is a list of your friends.',
+            'data' => ListFriendResource::collection($friends)
+        ], 200);
+    }
+
+    /**
+     * List of friend that we have been requesting
+     */
     public function requested(Request $request)
     {
         $friend_requesting = Friend::requested($request);
@@ -37,7 +49,7 @@ class FriendController extends Controller
         ], 200) : response()->json([
             'success' => false,
             'message' => 'Friend already requested',
-        ], 500); 
+        ], 500);
     }
 
     /**
@@ -62,5 +74,19 @@ class FriendController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function acceptFriend(Request $request, string $friend_id)
+    {
+        $friend_accept = Friend::accept($request, $friend_id);
+
+        return $friend_accept ? response()->json([
+            'success' => true,
+            'message' => 'Friend accepted successfully.',
+            'data' => $friend_accept
+        ], 200) : response()->json([
+            'success' => false,
+            'message' => 'Friend request not found with id ' . $friend_id,
+        ], 404);
     }
 }
