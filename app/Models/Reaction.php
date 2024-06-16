@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Reaction extends Model
 {
     use HasFactory;
-    protected $fillable = ['user_id','type'];
+    protected $fillable = ['type'];
 
     public static function createOrUpdate($request, $id = null)
     {
-        $reaction = $request->only('user_id','type');
+        $reaction = $request->only('type');
         $reaction = self::updateOrCreate(['id' => $id], $reaction);
         return $reaction;
     }

@@ -14,13 +14,12 @@ class ReactionController extends Controller
      */
     public function index()
     {
-        $reaction= Reaction::all();
+        $reaction = Reaction::all();
         return response()->json([
-           'success' => true,
-           'message' => 'Reaction created successfully.',
+            'success' => true,
+            'message' => 'Reaction created successfully.',
             'data' => $reaction
         ]);
-
     }
 
     /**
@@ -30,8 +29,8 @@ class ReactionController extends Controller
     {
         $reaction = Reaction::createOrUpdate($request);
         return response()->json([
-           'success' => true,
-           'message' => 'Reaction created successfully.',
+            'success' => true,
+            'message' => 'Reaction created successfully.',
             'data' => $reaction
         ]);
     }

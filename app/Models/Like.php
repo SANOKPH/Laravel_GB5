@@ -21,33 +21,10 @@ class Like extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function medias(): HasMany
-    {
-        return $this->hasMany(Media::class, 'post_id', 'id');
-    }
-
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class, 'post_id', 'id');
     }
-
-    public function likes(): HasMany
-    {
-        return $this->hasMany(Like::class, 'post_id', 'id');
-    }
-
-    public function shares(): HasMany
-    {
-        return $this->hasMany(Share::class);
-    }
-
-
-    public static function list()
-    {
-        $likes = self::all();
-        return $likes;
-    }
-   
 
     public static function createOrUpdate($request, $id = null)
     {

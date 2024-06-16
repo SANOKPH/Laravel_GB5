@@ -15,7 +15,6 @@ class StoreReactionRequest extends DefaultRequest
     {
         return [
             'type' => 'string|required|unique:reactions',
-            'user_id'=>'required|integer|exists:users,id'
         ];
     }
 }

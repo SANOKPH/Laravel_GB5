@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UserFriendRequest;
+use App\Http\Resources\Friends\ListFriendAcceptedResource;
+use App\Http\Resources\Friends\ListFriendRequestResource;
 use App\Http\Resources\Friends\ListFriendResource;
+use App\Http\Resources\Friends\ShowFriendResource;
 use App\Models\Friend;
 use Illuminate\Http\Request;
 
@@ -18,12 +21,12 @@ class FriendController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Here is a list of your friends.',
-            'data' => ListFriendResource::collection($friends)
+            'data' => $friends
         ], 200);
     }
 
     /**
-     * List of friend that we have been requesting
+     * List of friend who requested to us
      */
     public function requested(Request $request)
     {
@@ -31,7 +34,7 @@ class FriendController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Here is a list of people who added friend to you.',
-            'data' => ListFriendResource::collection($friend_requesting),
+            'data' => ListFriendRequestResource::collection($friend_requesting),
             'request_count' => $friend_requesting->count(),
         ], 200);
     }

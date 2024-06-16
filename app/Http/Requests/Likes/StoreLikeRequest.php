@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Comments;
+namespace App\Http\Requests\Likes;
 
 use App\Http\Requests\DefaultRequest;
 
-class StoreCommentRequest extends DefaultRequest
+class StoreLikeRequest extends DefaultRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,9 +14,9 @@ class StoreCommentRequest extends DefaultRequest
     public function rules(): array
     {
         return [
-            'text' => 'required|string',
             'post_id' => 'integer|exists:posts,id',
             'comment_id' => 'integer|exists:comments,id',
+            'reaction_id' => 'required|integer|exists:reactions,id',
         ];
     }
 }

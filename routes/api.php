@@ -20,8 +20,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-Route::post('/reaction/create', [ReactionController::class, 'store']);
-Route::get('/reaction/list', [ReactionController::class, 'index']);
+Route::group(['prefix' => 'reactions'], function () {
+    Route::post('/create', [ReactionController::class, 'store']);
+    Route::get('/list', [ReactionController::class, 'index']);
+});
 
 
 
@@ -40,7 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // friend routes
     Route::group(['prefix' => 'friends'], function () {
-        Route::get('/', [FriendController::class, 'index'])->name('friends.list');
+        Route::get('/', [FriendController::class, 'index'])->name('friends.list'); // list all friends who accepted 
         Route::get('/request', [FriendController::class, 'requested'])->name('friends.requested'); // get friends who requested to us
         Route::post('/', [FriendController::class, 'store'])->name('friends.create'); // add to friends
         Route::put('/accept/{id}', [FriendController::class, 'acceptFriend'])->name('friends.accept');
@@ -54,7 +56,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/{id}', [PostController::class, 'update'])->name('posts.update'); // hardly to use the 'put' method to update posts that have images
         Route::delete('/{id}', [PostController::class, 'destroy'])->name('posts.delete');
 
-        Route::get('/comments', [PostController::class, 'comments'])->name('posts.comments');
+        Route::get('/{id}/comments', [PostController::class, 'comments'])->name('posts.comments');
+        Route::get('/{id}/likes', [PostController::class, 'likes'])->name('posts.likes');
     });
 
     /**
@@ -79,10 +82,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // like routes
     Route::group(['prefix' => 'likes'], function () {
-        Route::get('/', [LikeController::class, 'index'])->name('likes.list');
-        Route::get('/{id}', [LikeController::class, 'show'])->name('likes.show');
-        Route::post('/', [LikeController::class, 'store'])->name('likes.create');
-        Route::put('/{id}', [LikeController::class, 'update'])->name('likes.update');
-        Route::delete('/{id}', [LikeController::class, 'destroy'])->name('likes.delete');
+        Route::resource('/', LikeController::class);
     });
 });
