@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\FriendController;
 use App\Http\Controllers\Api\LikeController;
 use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\ReactionController;
 use App\Http\Controllers\Api\SharePostController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\AuthController;
@@ -19,6 +20,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
+Route::group(['prefix' => 'reactions'], function () {
+    Route::post('/create', [ReactionController::class, 'store']);
+    Route::get('/list', [ReactionController::class, 'index']);
+});
+
 
 
 // protected routes
@@ -31,14 +37,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/profile', [AuthController::class, 'index'])->name('user.profile');
         Route::put('/profile', [AuthController::class, 'update'])->name('user.update.profile');
 
-        Route::get('/request', [UserController::class, 'requested'])->name('user.request');
+        Route::get('/friend-request', [UserController::class, 'requested'])->name('user.request'); // get friend we are requesting
     });
     
     // friend routes
     Route::group(['prefix' => 'friends'], function () {
-        Route::get('/', [FriendController::class, 'index'])->name('friends.list');
-        Route::get('/request', [FriendController::class, 'requested'])->name('friends.requested');
-        Route::post('/', [FriendController::class, 'store'])->name('friends.create');
+        Route::get('/', [FriendController::class, 'index'])->name('friends.list'); // list all friends who accepted 
+        Route::get('/request', [FriendController::class, 'requested'])->name('friends.requested'); // get friends who requested to us
+        Route::post('/', [FriendController::class, 'store'])->name('friends.create'); // add to friends
         Route::put('/accept/{id}', [FriendController::class, 'acceptFriend'])->name('friends.accept');
     });
 
@@ -49,6 +55,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [PostController::class, 'store'])->name('posts.create');
         Route::post('/{id}', [PostController::class, 'update'])->name('posts.update'); // hardly to use the 'put' method to update posts that have images
         Route::delete('/{id}', [PostController::class, 'destroy'])->name('posts.delete');
+
+        Route::get('/{id}/comments', [PostController::class, 'comments'])->name('posts.comments');
+        Route::get('/{id}/likes', [PostController::class, 'likes'])->name('posts.likes');
     });
 
     /**
@@ -73,18 +82,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // like routes
     Route::group(['prefix' => 'likes'], function () {
-        Route::get('/', [LikeController::class, 'index'])->name('likes.list');
-        Route::get('/{id}', [LikeController::class, 'show'])->name('likes.show');
-        Route::post('/', [LikeController::class, 'store'])->name('likes.create');
-        Route::put('/{id}', [LikeController::class, 'update'])->name('likes.update');
-        Route::delete('/{id}', [LikeController::class, 'destroy'])->name('likes.delete');
-    });
-
-    // friend routes
-    Route::group(['prefix' => 'friends'], function () {
-        Route::get('/', [FriendController::class, 'index'])->name('friends.index');
-        Route::get('/{id}', [FriendController::class, 'show'])->name('friends.show');
-        Route::post('/', [FriendController::class, 'store'])->name('friends.request');
-        Route::delete('/{id}', [FriendController::class, 'destroy'])->name('friends.delete');
+        Route::resource('/', LikeController::class);
     });
 });

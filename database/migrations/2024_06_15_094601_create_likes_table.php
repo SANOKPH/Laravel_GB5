@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::create('likes', function (Blueprint $table) {
             $table->id();
-            $table->text('text');
-            $table->integer('comment_id')->nullable();
-            $table->integer('post_id')->nullable();
-            $table->integer('user_id');
-            $table->softDeletes();
+            $table->integer("post_id")->nullable();
+            $table->integer("comment_id")->nullable();
+            $table->integer("user_id");
+            $table->integer("reaction_id");
+            $table->integer("like_count")->default(1);
+            $table->boolean('status')->default(true);
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comments');
+        Schema::dropIfExists('likes');
     }
 };

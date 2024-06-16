@@ -7,6 +7,8 @@ use App\Http\Requests\Posts\StorePostRequest;
 use App\Http\Requests\Posts\UpdatePostRequest;
 use App\Http\Resources\Posts\ListPostResource;
 use App\Http\Resources\User\UserPostResource;
+use App\Models\Comment;
+use App\Models\Like;
 use App\Models\Media;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -87,9 +89,26 @@ class PostController extends Controller
       return $post ? response()->json([
          'success' => true,
          'message' => 'Post deleted successfully.',
-      ],200) : response()->json([
+      ], 200) : response()->json([
          'success' => false,
          'message' => 'Post not found with id: ' . $id,
-      ],404);
+      ], 404);
+   }
+
+   public function comments(Request $request, string $id)
+   {
+      $comments = Comment::where('post_id', $id)->get();
+      return response()->json([
+         'data' => $comments
+      ], 200);
+   }
+
+   public function likes(Request $request, string $id) 
+   {
+      $likes = Like::where('post_id', $id)->get();
+      return response()->json([
+         'data' => $likes,
+         'like_count' => $likes->count()
+      ], 200);
    }
 }

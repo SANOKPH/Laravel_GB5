@@ -3,34 +3,35 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Comments\StoreCommentRequest;
-use App\Models\Comment;
+use App\Http\Requests\Reactions\StoreReactionRequest;
+use App\Models\Reaction;
 use Illuminate\Http\Request;
 
-class CommentController extends Controller
+class ReactionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        // $comments=CommentController::list();
-
+        $reaction = Reaction::all();
+        return response()->json([
+            'success' => true,
+            'message' => 'Reaction created successfully.',
+            'data' => $reaction
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCommentRequest $request)
+    public function store(StoreReactionRequest $request)
     {
-        $comment = Comment::createOrUpdate($request);
-        return $comment ? response()->json([
+        $reaction = Reaction::createOrUpdate($request);
+        return response()->json([
             'success' => true,
-            'message' => 'You commented.',
-            'data' => $comment
-        ], 200) : response()->json([
-            'success' => false,
-            'message' => 'Something went wrong'
+            'message' => 'Reaction created successfully.',
+            'data' => $reaction
         ]);
     }
 

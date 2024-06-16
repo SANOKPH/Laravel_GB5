@@ -61,14 +61,14 @@ class User extends Authenticatable
     }
     public function friends(): HasMany
     {
-        return $this->HasMany(Friend::class, 'user_id', 'id');
+        return $this->HasMany(Friend::class, 'is_friend', 1);
     }
 
     public static function requested($request)
     {
         return Friend::where('is_friend', 0)
                     ->where('user_id', '=', $request->user()->id)
-                    ->whereNot('user_id', '!=', $request->user()->id)
+                    // ->orWhere('friend_id', '=', $request->user()->id)
                     ->get();
     }
     public static function createOrUpdate(UserRegisterRequest $request, string $id = null)
