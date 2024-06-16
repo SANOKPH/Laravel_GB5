@@ -30,7 +30,7 @@ class FriendController extends Controller
         $friend_requesting = Friend::requested($request);
         return response()->json([
             'success' => true,
-            'message' => 'Here is a list of your friends you have been requesting.',
+            'message' => 'Here is a list of people who added friend to you.',
             'data' => ListFriendResource::collection($friend_requesting),
             'request_count' => $friend_requesting->count(),
         ], 200);

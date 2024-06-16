@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
+            $table->text('text');
+            $table->integer('comment_id')->nullable();
+            $table->integer('post_id')->nullable();
+            $table->integer('user_id');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

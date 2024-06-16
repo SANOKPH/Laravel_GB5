@@ -31,14 +31,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/profile', [AuthController::class, 'index'])->name('user.profile');
         Route::put('/profile', [AuthController::class, 'update'])->name('user.update.profile');
 
-        Route::get('/request', [UserController::class, 'requested'])->name('user.request');
+        Route::get('/friend-request', [UserController::class, 'requested'])->name('user.request'); // get friend we are requesting
     });
     
     // friend routes
     Route::group(['prefix' => 'friends'], function () {
         Route::get('/', [FriendController::class, 'index'])->name('friends.list');
-        Route::get('/request', [FriendController::class, 'requested'])->name('friends.requested');
-        Route::post('/', [FriendController::class, 'store'])->name('friends.create');
+        Route::get('/request', [FriendController::class, 'requested'])->name('friends.requested'); // get friends who requested to us
+        Route::post('/', [FriendController::class, 'store'])->name('friends.create'); // add to friends
         Route::put('/accept/{id}', [FriendController::class, 'acceptFriend'])->name('friends.accept');
     });
 
@@ -49,6 +49,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [PostController::class, 'store'])->name('posts.create');
         Route::post('/{id}', [PostController::class, 'update'])->name('posts.update'); // hardly to use the 'put' method to update posts that have images
         Route::delete('/{id}', [PostController::class, 'destroy'])->name('posts.delete');
+
+        Route::get('/comments', [PostController::class, 'comments'])->name('posts.comments');
     });
 
     /**
@@ -78,13 +80,5 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [LikeController::class, 'store'])->name('likes.create');
         Route::put('/{id}', [LikeController::class, 'update'])->name('likes.update');
         Route::delete('/{id}', [LikeController::class, 'destroy'])->name('likes.delete');
-    });
-
-    // friend routes
-    Route::group(['prefix' => 'friends'], function () {
-        Route::get('/', [FriendController::class, 'index'])->name('friends.index');
-        Route::get('/{id}', [FriendController::class, 'show'])->name('friends.show');
-        Route::post('/', [FriendController::class, 'store'])->name('friends.request');
-        Route::delete('/{id}', [FriendController::class, 'destroy'])->name('friends.delete');
     });
 });

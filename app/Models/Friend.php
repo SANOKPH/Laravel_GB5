@@ -5,12 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Friend extends Model
 {
     use HasFactory;
     protected $fillable = ['user_id', 'friend_id', 'is_friend'];
 
+    public function friends(): HasMany {
+        return $this->hasMany(User::class, 'user_id', 'id');
+    }
     public function sender(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
@@ -23,7 +27,9 @@ class Friend extends Model
 
     public static function list($request) 
     {
-        return self::where('user_id', $request->user()->id)->where('is_friend', 1)->get();
+        return self::where('user_id', $request->user()->id)
+                    ->orWhere('friend_id', $request->user()->id)
+                    ->where('is_friend', 1)->get();
     }
 
     public static function requested($request)

@@ -87,9 +87,14 @@ class PostController extends Controller
       return $post ? response()->json([
          'success' => true,
          'message' => 'Post deleted successfully.',
-      ],200) : response()->json([
+      ], 200) : response()->json([
          'success' => false,
          'message' => 'Post not found with id: ' . $id,
-      ],404);
+      ], 404);
+   }
+
+   public function comments(Request $request)
+   {
+      
    }
 }
