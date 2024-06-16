@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\FriendController;
 use App\Http\Controllers\Api\LikeController;
 use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\ReactionController;
 use App\Http\Controllers\Api\SharePostController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\AuthController;
@@ -18,6 +19,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // public routes
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
+
+Route::post('/reaction/create', [ReactionController::class, 'store']);
+Route::get('/reaction/list', [ReactionController::class, 'index']);
 
 
 
