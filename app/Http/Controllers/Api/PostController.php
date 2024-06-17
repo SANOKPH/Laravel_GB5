@@ -19,6 +19,14 @@ class PostController extends Controller
    /**
     * Display a listing of the resource.
     */
+   /**
+ * @OA\Get(
+    * path="/api/posts",
+    * summary="list all your posts",
+    * @OA\Response(response="201", description="User login successfully"),
+    * @OA\Response(response="422", description="Validation errors")
+ * )
+ */
    public function index(Request $request)
    {
       $user_id = $request->user()->id;

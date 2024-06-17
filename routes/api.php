@@ -36,7 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/profile', [AuthController::class, 'index'])->name('user.profile');
         Route::put('/profile', [AuthController::class, 'update'])->name('user.update.profile');
 
-        Route::get('/friend/list', [FriendController::class, 'index'])->name('user.friend-list'); // list friend accepted
+        Route::get('/friend', [FriendController::class, 'index'])->name('user.friend-list'); // list friend accepted
 
         Route::get('/request-friend', [FriendController::class, 'requestToFriend'])->name('user.request-to-friend'); // get friend we are requesting
 

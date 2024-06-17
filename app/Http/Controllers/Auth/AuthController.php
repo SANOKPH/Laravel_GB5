@@ -10,8 +10,61 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
 class AuthController extends Controller
 {
+
+/**
+ * @OA\Post(
+    * path="/api/register",
+    * summary="Register a new user",
+    * @OA\Parameter(
+        * name="first_name",
+        * in="query",
+        * description="User’s first_name",
+        * required=true,
+        * @OA\Schema(type="string")
+    * ),
+    * @OA\Parameter(
+        * name="last_name",
+        * in="query",
+        * description="User’s last_name",
+        * required=true,
+        * @OA\Schema(type="string")
+    * ),
+    * @OA\Parameter(
+        * name="email",
+        * in="query",
+        * description="User’s email",
+        * required=true,
+        * @OA\Schema(type="string")
+    * ),
+    * @OA\Parameter(
+        * name="password",
+        * in="query",
+        * description="User’s password",
+        * required=true,
+        * @OA\Schema(type="string")
+    * ),
+    * @OA\Parameter(
+        * name="phone",
+        * in="query",
+        * description="User’s phone",
+        * required=true,
+        * @OA\Schema(type="string")
+    * ),
+    * @OA\Parameter(
+        * name="image",
+        * in="query",
+        * description="User’s image",
+        * required=true,
+        * @OA\Schema(type="string")
+    * ),
+    * 
+    * @OA\Response(response="201", description="User registered successfully"),
+    * @OA\Response(response="422", description="Validation errors")
+ * )
+ */
     public function register(UserRegisterRequest $request)
     {
         $user = User::createOrUpdate($request);
@@ -23,7 +76,27 @@ class AuthController extends Controller
         ]);
     }
 
-    // user login
+/**
+ * @OA\Post(
+    * path="/api/login",
+    * summary="login to your account",
+    * @OA\Parameter(
+        * name="email",
+        * in="query",
+        * description="User’s email",
+        * required=true,
+        * @OA\Schema(type="string")
+    * ),
+    * @OA\Parameter(
+        * name="password",
+        * in="query",
+        * description="User’s password",
+        * @OA\Schema(type="password")
+    * ),
+    * @OA\Response(response="201", description="User login successfully"),
+    * @OA\Response(response="422", description="Validation errors")
+ * )
+ */
     public function login(UserLoginRequest $request)
     {
         $credentials = $request->only('email', 'password');
@@ -44,7 +117,29 @@ class AuthController extends Controller
         ]);
     }
 
-    // user logout
+    
+/**
+ * @OA\Post(
+    * path="/api/logout",
+    * summary="logout from your account",
+    * @OA\Parameter(
+        * name="email",
+        * in="query",
+        * description="User’s email",
+        * required=true,
+        * @OA\Schema(type="string")
+    * ),
+    * @OA\Parameter(
+        * name="password",
+        * in="query",
+        * description="User’s password",
+        * required=true,
+        * @OA\Schema(type="string")
+    * ),
+    * @OA\Response(response="201", description="User login successfully"),
+    * @OA\Response(response="422", description="Validation errors")
+ * )
+ */
     public function logout()
     {
         Auth::user()->tokens()->delete();
