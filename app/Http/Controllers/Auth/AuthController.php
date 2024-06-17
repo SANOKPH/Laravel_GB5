@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    // user registration
     public function register(UserRegisterRequest $request)
     {
         $user = User::createOrUpdate($request);
