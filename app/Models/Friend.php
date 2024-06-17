@@ -35,14 +35,25 @@ class Friend extends Model
                     ->get();
     }
 
-    public static function requested($request)
+    public static function requestedFromFriend($request) // get users we requested to
     {
-        return self::where('friend_id', $request->user()->id)->get();
+        $friends = self::where('friend_id', $request->user()->id)
+                        ->where('is_friend', 0)
+                        ->get();
+        return $friends;
     }
 
-    public static function accept($request, $id)
+    public static function requestedToFriend($request) // get users we requested to
     {
-        $friend_request = self::where('user_id', $id)
+        $friends = self::where('user_id', $request->user()->id)
+                        ->where('is_friend', 0)
+                        ->get();
+        return $friends;
+    }
+
+    public static function accept($request)
+    {
+        $friend_request = self::where('user_id', $request->friend_id)
                             ->where('friend_id',  $request->user()->id)
                             ->where('is_friend', 0)
                             ->first();
@@ -51,15 +62,31 @@ class Friend extends Model
         $friend_request->is_friend = 1;
         $friend_request->save();
 
+        $request['is_friend'] = 1;
+        self::createOrUpdate($request);
+
         return $friend_request;
+    }
+
+    public static function unfriend($request, $id) {
+        $user_id = $request->user()->id;
+        $friend = self::where('user_id', $user_id)
+                      ->where('friend_id', $id)
+                      ->orWhere('user_id', $id)
+                      ->where('friend_id', $user_id)
+                      ->where('is_friend', 1)
+                      ->delete();
+
+        return $friend; 
     }
 
     public static function createOrUpdate($request, $id = null)
     {
-        if (self::where('friend_id', $request->friend_id)->exists()) return false;
+        if (self::where('friend_id', $request->friend_id)->where('user_id', $request->user()->id)->exists()) return false;
         $friend = [
             'user_id' => $request->user()->id,
-            'friend_id' => $request->friend_id
+            'friend_id' => $request->friend_id,
+            'is_friend' => $request->is_friend ?? 0
         ];
         $friend = self::updateOrCreate(['id' => $id], $friend);
         return $friend;

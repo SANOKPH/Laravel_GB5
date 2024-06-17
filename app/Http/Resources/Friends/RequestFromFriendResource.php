@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources\Friends;
 
+use App\Http\Resources\User\ProfileResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ShowFriendResource extends JsonResource
+class RequestFromFriendResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,7 +16,7 @@ class ShowFriendResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'friends' => $this->friends
+            'user' => new ProfileResource($this->sender)
         ];
     }
 }
